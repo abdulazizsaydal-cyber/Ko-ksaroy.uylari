@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ko'k Saroy uylari</title>
+<style>
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+    background:#191818;font-family:sans-serif;color:#fff;}
+  .spin{width:34px;height:34px;border-radius:50%;border:3px solid rgba(255,255,255,0.2);
+    border-top-color:#2A4BFF;animation:sp 0.8s linear infinite;}
+  @keyframes sp{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+<div class="spin"></div>
+<script>
+(function(){
+  var VARIANTS = ["site1", "site2", "site3"];
+  var COOKIE_NAME = "ks_variant";
+
+  function getCookie(name){
+    var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+    return m ? decodeURIComponent(m[1]) : null;
+  }
+  function setCookie(name, value, days){
+    var d = new Date();
+    d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = name + "=" + encodeURIComponent(value) + ";expires=" + d.toUTCString() + ";path=/";
+  }
+
+  var variant = getCookie(COOKIE_NAME);
+  if (!variant || VARIANTS.indexOf(variant) === -1) {
+    variant = VARIANTS[Math.floor(Math.random() * VARIANTS.length)];
+    setCookie(COOKIE_NAME, variant, 30);
+  }
+
+  // Preserve every incoming param (fbclid, utm_*, etc.) and tag which variant was shown
+  var params = new URLSearchParams(window.location.search);
+  params.set("site_variant", variant);
+
+  var target = "/" + variant + ".html?" + params.toString();
+  window.location.replace(target);
+})();
+</script>
+</body>
+</html>
